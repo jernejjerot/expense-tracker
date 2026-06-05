@@ -1,149 +1,137 @@
-# Expense Tracker Analyzer Demo
+# Mini Expense Tracker Monorepo
 
-A structured Python CLI expense tracker designed for repository analysis platform testing.
+GitHub-ready TypeScript full-stack project optimized for CI/CD quality analysis.
 
-It now also includes a lightweight web dashboard UI built with FastAPI + Jinja2.
+## Stack
 
-The project is intentionally simple to understand, while still reflecting realistic engineering practices:
+- Frontend: React + Vite (`apps/web`)
+- Backend: Node.js + Express + Zod (`apps/api`)
+- Persistence: SQLite + Prisma
+- Shared contracts: `packages/shared`
 
-- layered architecture,
-- domain validation rules,
-- service layer with business logic,
-- test coverage,
-- CI pipeline,
-- configuration and documentation folders.
+## Architecture
 
-## Core Features
+- `apps/api`: REST API, domain service, validation, error middleware, Prisma persistence
+- `apps/web`: UI for CRUD, filtering and summary trend visualization
+- `packages/shared`: shared schemas/types used by both apps
 
-- Add expenses with validation (category, amount, date, description).
-- List expenses with month/year filters.
-- Get monthly summary with totals by category.
-- Set monthly budget.
-- Check budget status (remaining amount and over-budget detection).
-- Use a browser dashboard to add expenses and view monthly analytics.
+Detailed architecture and flow diagrams are in [docs/architecture.md](docs/architecture.md).
 
-## Project Structure
+## Repository Structure
 
 ```text
 .
-├── .github/workflows/ci.yml
-├── config/
-│   ├── settings.example.json
-│   └── settings.local.json
-├── data/
-│   └── sample_expenses.json
+├── apps/
+│   ├── api/
+│   │   ├── prisma/
+│   │   ├── src/
+│   │   │   ├── config/
+│   │   │   ├── db/
+│   │   │   ├── errors/
+│   │   │   ├── middleware/
+│   │   │   └── modules/expenses/
+│   │   └── tests/
+│   └── web/
+│       ├── src/
+│       │   ├── api/
+│       │   ├── components/
+│       │   ├── pages/
+│       │   ├── styles/
+│       │   └── utils/
+│       └── tests/
+├── packages/
+│   └── shared/
 ├── docs/
-│   ├── architecture.md
-│   └── testing.md
-├── src/expense_tracker/
-│   ├── application/services.py
-│   ├── config/settings.py
-│   ├── domain/
-│   │   ├── constants.py
-│   │   ├── exceptions.py
-│   │   └── models.py
-│   ├── infrastructure/repository.py
-│   └── interface/
-│       ├── cli.py
-│       ├── web.py
-│       ├── static/styles.css
-│       └── templates/index.html
-├── tests/
-│   ├── conftest.py
-│   ├── test_budget_logic.py
-│   ├── test_expense_service.py
-│   └── test_web_ui.py
-├── .editorconfig
-├── .gitignore
-├── LICENSE
-└── pyproject.toml
+├── scripts/
+└── .github/workflows/
 ```
 
 ## Local Setup
 
-### 1. Create environment and install dependencies
+### Prerequisites
+
+- Node.js 20+
+- npm 10+
+
+### Install
 
 ```bash
-python -m venv .venv
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-pip install -e .[dev]
+npm install
 ```
 
-### 2. Prepare local config
-
-`config/settings.local.json` is already included for local development.
-
-Optional: override config path with environment variable:
+### Database migrate + seed
 
 ```bash
-set EXPENSE_TRACKER_CONFIG=config/settings.local.json
+npm run migrate
+npm run seed
 ```
 
-### 3. Run commands
-
-Add expense:
+### Run (web + api)
 
 ```bash
-expense-tracker add --description "Groceries" --category food --amount 42.90 --date 2026-06-05
+npm run dev
 ```
 
-List expenses:
+- API: `http://localhost:4000`
+- Web: `http://localhost:5173`
+
+### Test
 
 ```bash
-expense-tracker list --year 2026 --month 6
+npm run test
+npm run test:coverage
 ```
 
-Set budget:
+### Build
 
 ```bash
-expense-tracker budget set --year 2026 --month 6 --amount 1200
+npm run build
 ```
 
-Budget status:
+## API Endpoints
 
-```bash
-expense-tracker budget status --year 2026 --month 6
-```
+- `GET /api/v1/expenses`
+- `POST /api/v1/expenses`
+- `PATCH /api/v1/expenses/:id`
+- `DELETE /api/v1/expenses/:id`
+- `GET /api/v1/expenses/summary/monthly?year=YYYY&month=MM`
+- `GET /health`
 
-Monthly summary:
+## Build / Deploy / Release Process
 
-```bash
-expense-tracker summary --year 2026 --month 6
-```
+### CI (`ci.yml`)
 
-Run web dashboard:
+- Lint, typecheck, test (with coverage), build
+- Dependency cache via `setup-node`
+- Coverage artifact upload
 
-```bash
-expense-tracker-web
-```
+### Security (`security.yml`)
 
-Then open:
+- `npm audit` (fails on high/critical)
+- `gitleaks` secret scan
+- Dependency review for pull requests
 
-```text
-http://127.0.0.1:8000
-```
+### Release (`release.yml`)
 
-## Tests and Lint
+- Triggered only by tag push `v*`
+- Rebuilds project and creates GitHub Release with attached artifacts
 
-```bash
-ruff check .
-pytest
-```
+### Deploy (`deploy.yml`)
 
-## CI
+- Triggered on `main`
+- Runs staging deployment flow using guarded scripts
+- Includes health-check gate and rollback command path
 
-GitHub Actions workflow in `.github/workflows/ci.yml` runs:
+## Quality Standards
 
-1. dependency installation,
-2. lint (`ruff`),
-3. tests (`pytest`).
+- Strict TypeScript settings
+- Zod runtime validation
+- Standardized API error model
+- Coverage thresholds >=80% on key modules
+- Concurrency and minimal permissions in workflows
 
-## Notes for Analysis Platforms
+## Contributing and Security
 
-This repository contains enough structural signals for deep analysis:
-
-- clear separation of concerns,
-- configuration and docs as first-class folders,
-- deterministic tests for business behavior,
-- CI and repository hygiene files.
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Security policy: [SECURITY.md](SECURITY.md)
+- License: [LICENSE](LICENSE)

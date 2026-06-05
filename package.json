@@ -1,0 +1,35 @@
+{
+  "name": "expense-tracker-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub-ready full-stack mini expense tracker with strong CI/CD quality",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "npm run lint --workspace @expense-tracker/shared && npm run lint --workspace @expense-tracker/api && npm run lint --workspace @expense-tracker/web",
+    "typecheck": "npm run typecheck --workspace @expense-tracker/shared && npm run typecheck --workspace @expense-tracker/api && npm run typecheck --workspace @expense-tracker/web",
+    "test": "npm run test --workspace @expense-tracker/shared && npm run test --workspace @expense-tracker/api && npm run test --workspace @expense-tracker/web",
+    "test:coverage": "npm run test:coverage --workspace @expense-tracker/shared && npm run test:coverage --workspace @expense-tracker/api && npm run test:coverage --workspace @expense-tracker/web",
+    "build": "npm run build --workspace @expense-tracker/shared && npm run build --workspace @expense-tracker/api && npm run build --workspace @expense-tracker/web",
+    "migrate": "npm run prisma:generate --workspace @expense-tracker/api && npm run prisma:migrate --workspace @expense-tracker/api",
+    "seed": "npm run prisma:generate --workspace @expense-tracker/api && npm run prisma:seed --workspace @expense-tracker/api",
+    "dev": "concurrently \"npm run dev --workspace @expense-tracker/api\" \"npm run dev --workspace @expense-tracker/web\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "@types/node": "^22.10.5",
+    "concurrently": "^9.1.2",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

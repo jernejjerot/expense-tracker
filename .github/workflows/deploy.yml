@@ -1,0 +1,34 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  STAGING_HEALTH_URL: https://httpbin.org/status/200
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Safe deploy command flow
+        run: bash scripts/safe-deploy.sh
+      - name: Health check
+        id: health
+        run: bash scripts/health-check.sh "${STAGING_HEALTH_URL}"
+      - name: Rollback on failure
+        if: failure() && steps.health.outcome == 'failure'
+        run: bash scripts/rollback.sh

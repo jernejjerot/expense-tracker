@@ -1,15 +1,29 @@
 # Testing Strategy
 
-The test suite validates key business behavior rather than only trivial cases.
+This repository uses layered tests to protect business logic and delivery quality.
 
 ## Scope
 
-- Input validation (amount and category checks).
-- Expense persistence via JSON repository.
-- Monthly summary aggregation by category.
-- Budget status (within and over budget).
+- Unit tests:
+	- shared schema/format utilities
+	- API monthly analytics calculation
+- API integration tests:
+	- CRUD endpoints
+	- input validation errors
+	- monthly summary response
+- Frontend component/util tests:
+	- summary cards rendering
+	- formatting functions
 
 ## Tooling
 
-- `pytest` for unit tests.
-- Temporary filesystem fixtures for isolated repository tests.
+- `vitest` for all workspaces
+- `supertest` for API integration tests
+- `@testing-library/react` for UI component behavior
+
+## Coverage Gates
+
+- Coverage threshold configured to at least 80% for key modules in:
+	- `apps/api/vitest.config.ts`
+	- `apps/web/vite.config.ts`
+	- `packages/shared/vitest.config.ts`
