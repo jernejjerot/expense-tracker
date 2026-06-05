@@ -1,0 +1,6 @@
+{
+  "expenses_file": "data/expenses.json",
+  "budgets_file": "data/budgets.json",
+  "currency": "EUR",
+  "default_monthly_budget": "1200"
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "expense_id": "0e73db73-91d5-4f83-968f-f2747f774ce2",
+    "description": "Weekly groceries",
+    "category": "food",
+    "amount": "58.70",
+    "spent_on": "2026-06-01"
+  },
+  {
+    "expense_id": "c9cc1d68-5ad9-4f56-a4f6-c2fba1886018",
+    "description": "Monthly transport card",
+    "category": "transport",
+    "amount": "37.00",
+    "spent_on": "2026-06-02"
+  },
+  {
+    "expense_id": "1730578f-8b86-4be3-a2ab-c017dcb58bc9",
+    "description": "Electricity bill",
+    "category": "utilities",
+    "amount": "72.15",
+    "spent_on": "2026-06-03"
+  }
+]
